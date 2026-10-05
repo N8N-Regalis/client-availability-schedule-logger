@@ -1,0 +1,241 @@
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #f0f4f8;
+  background-color: #0b1326;
+  --primary: #c5a059;
+  --primary-hover: #e6c875;
+  --primary-gradient: linear-gradient(135deg, #c5a059 0%, #e6c875 50%, #b08d46 100%);
+  --border: #2a3a5c;
+  --bg-card: rgba(16, 26, 48, 0.92);
+  --slot-active: #c5a059;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 24px 16px;
+  background: #0b1326 linear-gradient(135deg, #09101f 0%, #152238 50%, #0b1326 100%) fixed;
+  color: #e2e8f0;
+}
+
+main { max-width: 1400px; margin: auto; }
+
+/* Header & Branding */
+header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.brand-container { display: flex; align-items: center; gap: 24px; }
+.header-text { display: flex; flex-direction: column; }
+.eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.15em; color: var(--primary); text-transform: uppercase; }
+.eyebrow.under-title { margin-top: 4px; }
+
+h1 { font-size: 32px; letter-spacing: 0.02em; margin: 4px 0; color: #ffffff; font-family: 'Times New Roman', Georgia, serif; }
+p { line-height: 1.5; margin: 2px 0; color: #94a3b8; font-size: 14px; }
+
+/* Metallic Gold Title Effect */
+.brand-title {
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  background: linear-gradient(
+    135deg,
+    #bf953f 0%,
+    #fcf6ba 25%,
+    #b38728 50%,
+    #fbf5b7 75%,
+    #aa771c 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.7));
+}
+
+/* User Profile Badge */
+.user-badge { display: flex; align-items: center; gap: 12px; background: #152442; border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; }
+.user-badge-info { text-align: right; }
+.user-badge-name { font-size: 14px; font-weight: bold; color: #fff; }
+.user-badge-email { font-size: 11px; color: var(--primary); }
+
+/* Layout Grid */
+.app-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+@media(max-width: 1024px) {
+  .app-layout { grid-template-columns: 1fr; }
+  header { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.37);
+  backdrop-filter: blur(10px);
+}
+
+/* Controls Toolbar */
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; font-size: 13px; }
+.control-group { display: flex; align-items: center; gap: 8px; }
+.control-group label { font-weight: 600; color: #cbd5e1; }
+select, input, textarea {
+  background: #111c35; border: 1px solid var(--border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 13px; outline: none;
+}
+select:focus, input:focus, textarea:focus { border-color: var(--primary); }
+input[list="timezone-options"] { width: 340px; max-width: 100%; }
+
+button {
+  font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; background: #162544; color: #e2e8f0; transition: all 0.2s;
+}
+button:hover { background: #20335e; }
+button.primary {
+  background: var(--primary-gradient);
+  border: none;
+  color: #0b1326;
+  font-weight: 700;
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(197, 160, 89, 0.25);
+}
+button.primary:hover { background: var(--primary-hover); }
+
+/* Grid Table & Fixed Scrollable Container */
+.grid-wrapper, .table-container {
+  max-height: 550px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  position: relative;
+}
+
+.schedule-table { width: 100%; border-spacing: 0; table-layout: fixed; font-size: 11px; }
+th, td { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0; text-align: center; }
+
+/* Sticky Top Date Headers */
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #152442;
+  color: #ffffff;
+  padding: 8px 4px;
+  font-weight: 600;
+  white-space: pre-line;
+  box-shadow: 0 1px 0 var(--border);
+}
+
+thead th:first-child { width: 85px; left: 0; z-index: 12; }
+
+/* Clickable date headers (select whole day) */
+thead th.day-header { cursor: pointer; user-select: none; transition: color 0.15s; }
+thead th.day-header:hover, thead th.day-header:focus-visible { color: var(--primary); outline: none; }
+
+/* Sticky Time Column */
+tbody th, th.time-col {
+  position: sticky;
+  left: 0;
+  background: #152442;
+  color: #cbd5e1;
+  z-index: 11;
+  font-weight: 500;
+  padding: 4px 2px;
+}
+
+/* Slots & Interactive States */
+.slot {
+  display: block; width: 100%; height: 28px; border: 0; background: transparent; cursor: pointer; transition: background 0.15s; color: #0b1326; font-weight: bold;
+}
+.slot[aria-pressed=true] { background: var(--slot-active); }
+.slot:disabled, .slot.disabled-slot {
+  background: rgba(255, 255, 255, 0.03);
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+/* Weekend columns - darker shade so they read apart from weekdays */
+thead th.weekend-col {
+  background: #0d1729;
+  color: #8ba1c4;
+}
+td.weekend-col {
+  background: rgba(4, 10, 22, 0.75);
+}
+td.weekend-col .slot:disabled, td.weekend-col .slot.disabled-slot {
+  background: transparent;
+}
+
+/* Available Anytime mode */
+button.btn-anytime[aria-pressed=true] { background: var(--primary-gradient); border-color: transparent; color: #0b1326; }
+.anytime-banner {
+  margin-bottom: 12px; padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--primary); background: rgba(197, 160, 89, 0.12); color: #f0e2bf; font-size: 13px; line-height: 1.5;
+}
+.anytime-banner strong { color: var(--primary-hover); }
+.anytime-on .slot, .anytime-on thead th.day-header { cursor: default; }
+.anytime-on thead th.day-header:hover { color: #ffffff; }
+
+/* Custom Gold & Dark Scrollbar */
+.grid-wrapper::-webkit-scrollbar, .table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.grid-wrapper::-webkit-scrollbar-track, .table-container::-webkit-scrollbar-track {
+  background: #0b1326;
+  border-radius: 4px;
+}
+
+.grid-wrapper::-webkit-scrollbar-thumb, .table-container::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.grid-wrapper::-webkit-scrollbar-thumb:hover, .table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Form Field Panels */
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+.field textarea { width: 100%; min-height: 100px; resize: vertical; }
+.field input.full-width { width: 100%; }
+.field input.readonly-total { width: 100%; font-weight: 700; color: var(--primary); background: #0c1527; }
+.field input.readonly-muted { width: 100%; color: #94a3b8; }
+
+/* Auth Overlay */
+.auth-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(11, 19, 38, 0.95);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* Blurred logo background behind the login card */
+.auth-overlay::before {
+  content: "";
+  position: absolute;
+  inset: -40px;                 /* hides the soft blurred edges */
+  background-image: url("./assets/regalis-logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: blur(14px);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+.auth-overlay .auth-card { position: relative; z-index: 1; }
+.auth-card {
+  width: 100%; max-width: 400px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+.auth-card h2 { margin-top: 0; font-family: 'Times New Roman', Georgia, serif; color: var(--primary); font-size: 24px; text-align: center; }
+.auth-error { color: #f87171; font-size: 12px; margin-top: 6px; }
