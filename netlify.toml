@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[redirects]]
+  from = "https://client-schedule-logger.netlify.app/*"
+  to = "https://scheduler.regaliscapital.com/:splat"
+  status = 301
+  force = true
