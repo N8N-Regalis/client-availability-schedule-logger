@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../lib/supabase.js';
 import {
   ANYTIME_NOTE_MARKER,
@@ -63,8 +63,14 @@ export default function Portal({ user, onLogout }) {
     return () => { cancelled = true; };
   }, [user.email, pickableSlotIds]);
 
+  // Remembers which slots each header/time click filled in ("day:2026-10-14", "time:2:30 AM" -> Set of slot ids),
+  // so clicking it again takes back only those and the client's earlier picks stay checked.
+  const bulkAdds = useRef(new Map());
+
   const toggleSlot = useCallback((id) => {
     if (anytime) return; // grid is locked while Available Anytime is on
+    // A hand-picked change makes this slot the client's own, so no header/time click should undo it later
+    bulkAdds.current.forEach((ids) => ids.delete(id));
     setSelected((prev) => {
       const next = new Set(prev);
       if (!next.delete(id)) next.add(id);
@@ -72,26 +78,57 @@ export default function Portal({ user, onLogout }) {
     });
   }, [anytime]);
 
-  // Checks every slot for the date; if they're all already checked, unchecks them instead
+  // Header/time click: checks all of `ids`. If they're all already checked, unchecks only what an earlier
+  // click filled in (or all of them when nothing was recorded, e.g. the client checked each one by hand).
+  const toggleBulk = useCallback((key, ids, { fillOnly = false } = {}) => {
+    const layers = bulkAdds.current;
+    const next = new Set(selected);
+
+    if (!fillOnly && ids.every((id) => selected.has(id))) {
+      const mine = layers.get(key);
+      layers.delete(key);
+      if (!mine) {
+        ids.forEach((id) => next.delete(id));
+      } else {
+        const heldByOthers = new Set([...layers.values()].flatMap((set) => [...set]));
+        mine.forEach((id) => { if (!heldByOthers.has(id)) next.delete(id); });
+      }
+    } else {
+      const heldByOthers = new Set(
+        [...layers.entries()].filter(([k]) => k !== key).flatMap(([, set]) => [...set]),
+      );
+      const filled = layers.get(key) ?? new Set();
+      ids.forEach((id) => {
+        if (!selected.has(id) || heldByOthers.has(id)) filled.add(id);
+        next.add(id);
+      });
+      layers.set(key, filled);
+    }
+    setSelected(next);
+  }, [selected]);
+
   const toggleDay = useCallback((dateKey) => {
     if (anytime) return;
-    const ids = TIME_SLOTS.map((time) => slotId(dateKey, time));
-    setSelected((prev) => {
-      const allChecked = ids.every((id) => prev.has(id));
-      const next = new Set(prev);
-      ids.forEach((id) => (allChecked ? next.delete(id) : next.add(id)));
-      return next;
-    });
-  }, [anytime]);
+    toggleBulk(`day:${dateKey}`, TIME_SLOTS.map((time) => slotId(dateKey, time)));
+  }, [anytime, toggleBulk]);
+
+  const toggleTime = useCallback((time) => {
+    if (anytime) return;
+    const ids = days.filter((day) => !day.isWeekend).map((day) => slotId(day.dateKey, time));
+    toggleBulk(`time:${time}`, ids);
+  }, [anytime, days, toggleBulk]);
 
   const clearSelection = () => {
+    bulkAdds.current.clear();
     setAnytime(false);
     setSelected(new Set());
   };
 
+  // Checks every weekday slot; clicking again takes back only what it filled in. Leaving Available Anytime
+  // always fills (back to the 14-day selection), since the grid already looked fully checked.
   const selectAllWeekdays = () => {
-    setAnytime(false); // back to the 14-day selection only
-    setSelected(new Set(pickableSlotIds));
+    toggleBulk('all', [...pickableSlotIds], { fillOnly: anytime });
+    setAnytime(false);
   };
 
   async function saveSchedule() {
@@ -140,6 +177,7 @@ export default function Portal({ user, onLogout }) {
           onTimezoneChange={setTimezone}
           onToggleSlot={toggleSlot}
           onToggleDay={toggleDay}
+          onToggleTime={toggleTime}
           onClear={clearSelection}
           onSelectAllWeekdays={selectAllWeekdays}
           onToggleAnytime={() => setAnytime((on) => !on)}

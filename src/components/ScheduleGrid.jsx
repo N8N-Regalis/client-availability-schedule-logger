@@ -16,7 +16,7 @@ const SlotCell = memo(function SlotCell({ id, pressed, onToggle }) {
   );
 });
 
-export default function ScheduleGrid({ days, selected, anytime, onToggleSlot, onToggleDay }) {
+export default function ScheduleGrid({ days, selected, anytime, onToggleSlot, onToggleDay, onToggleTime }) {
   return (
     <div className="grid-wrapper">
       <table className="schedule-table">
@@ -52,7 +52,21 @@ export default function ScheduleGrid({ days, selected, anytime, onToggleSlot, on
         <tbody>
           {TIME_SLOTS.map((time) => (
             <tr key={time}>
-              <th>{time}</th>
+              {/* Clicking a time checks that slot on every weekday shown (or unchecks them if all are checked) */}
+              <th
+                className="time-header"
+                tabIndex={0}
+                title="Click to select this time on all weekdays"
+                onClick={() => onToggleTime(time)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onToggleTime(time);
+                  }
+                }}
+              >
+                {time}
+              </th>
               {days.map((day) => {
                 const id = slotId(day.dateKey, time);
                 if (day.isWeekend) {

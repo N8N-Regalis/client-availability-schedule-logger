@@ -167,6 +167,9 @@ td.weekend-col .slot:disabled, td.weekend-col .slot.disabled-slot {
   background: transparent;
 }
 
+tbody th.time-header { cursor: pointer; user-select: none; transition: color 0.15s; }
+tbody th.time-header:hover, tbody th.time-header:focus-visible { color: var(--primary); outline: none; }
+
 /* Available Anytime mode */
 button.btn-anytime[aria-pressed=true] { background: var(--primary-gradient); border-color: transparent; color: #0b1326; }
 .anytime-banner {
@@ -174,8 +177,9 @@ button.btn-anytime[aria-pressed=true] { background: var(--primary-gradient); bor
   border: 1px solid var(--primary); background: rgba(197, 160, 89, 0.12); color: #f0e2bf; font-size: 13px; line-height: 1.5;
 }
 .anytime-banner strong { color: var(--primary-hover); }
-.anytime-on .slot, .anytime-on thead th.day-header { cursor: default; }
+.anytime-on .slot, .anytime-on thead th.day-header, .anytime-on tbody th.time-header { cursor: default; }
 .anytime-on thead th.day-header:hover { color: #ffffff; }
+.anytime-on tbody th.time-header:hover { color: #cbd5e1; }
 
 /* Custom Gold & Dark Scrollbar */
 .grid-wrapper::-webkit-scrollbar, .table-container::-webkit-scrollbar {

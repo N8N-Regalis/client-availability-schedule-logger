@@ -9,6 +9,7 @@ export default function ScheduleCard({
   onTimezoneChange,
   onToggleSlot,
   onToggleDay,
+  onToggleTime,
   onClear,
   onSelectAllWeekdays,
   onToggleAnytime,
@@ -45,6 +46,7 @@ export default function ScheduleCard({
         anytime={anytime}
         onToggleSlot={onToggleSlot}
         onToggleDay={onToggleDay}
+        onToggleTime={onToggleTime}
       />
     </div>
   );
