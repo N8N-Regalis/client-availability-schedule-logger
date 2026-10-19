@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import DateRangePanel from './DateRangePanel.jsx';
 import ScheduleGrid from './ScheduleGrid.jsx';
 import TimezoneInput from './TimezoneInput.jsx';
 
@@ -13,7 +15,11 @@ export default function ScheduleCard({
   onClear,
   onSelectAllWeekdays,
   onToggleAnytime,
+  onAddRange,
 }) {
+  const [rangeOpen, setRangeOpen] = useState(false);
+  const [preview, setPreview] = useState(null); // slots the open Date Range panel would add, not yet saved
+
   return (
     <div className={`card${anytime ? ' anytime-on' : ''}`}>
       <div className="toolbar">
@@ -26,12 +32,31 @@ export default function ScheduleCard({
             className="btn-anytime"
             aria-pressed={anytime}
             title="Mark yourself available on every weekday, at any time, going forward"
-            onClick={onToggleAnytime}
+            onClick={() => { setRangeOpen(false); onToggleAnytime(); }}
           >
             Available Anytime
           </button>
+          <button
+            type="button"
+            className="btn-anytime"
+            aria-pressed={rangeOpen}
+            disabled={anytime}
+            title={anytime ? 'Turn off Available Anytime to pick a date range' : 'Pick specific dates and an hour range'}
+            onClick={() => setRangeOpen((open) => !open)}
+          >
+            Date Range
+          </button>
         </div>
       </div>
+
+      {rangeOpen && !anytime && (
+        <DateRangePanel
+          days={days}
+          onSave={(ids) => { onAddRange(ids); setRangeOpen(false); }}
+          onCancel={() => setRangeOpen(false)}
+          onPreview={setPreview}
+        />
+      )}
 
       {anytime && (
         <div className="anytime-banner" role="status">
@@ -44,6 +69,7 @@ export default function ScheduleCard({
         days={days}
         selected={selected}
         anytime={anytime}
+        preview={rangeOpen && !anytime ? preview : null}
         onToggleSlot={onToggleSlot}
         onToggleDay={onToggleDay}
         onToggleTime={onToggleTime}

@@ -181,6 +181,27 @@ button.btn-anytime[aria-pressed=true] { background: var(--primary-gradient); bor
 .anytime-on thead th.day-header:hover { color: #ffffff; }
 .anytime-on tbody th.time-header:hover { color: #cbd5e1; }
 
+/* Date Range panel */
+button.btn-anytime:disabled { opacity: 0.45; cursor: not-allowed; }
+.range-panel {
+  margin-bottom: 16px; padding: 14px 16px; border-radius: 8px;
+  border: 1px solid var(--border); background: #111c35;
+}
+.range-fields { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.range-fields label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #cbd5e1; }
+.range-fields input[type=date] { color-scheme: dark; }
+.date-field { position: relative; display: flex; align-items: stretch; gap: 4px; }
+.date-field input[type=text] { width: 120px; }
+.date-picker-btn { padding: 4px 8px; font-size: 13px; line-height: 1; }
+.date-native { position: absolute; left: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; padding: 0; border: 0; }
+.range-optional { font-weight: 400; font-size: 11px; color: #94a3b8; }
+.range-hint { font-size: 12px; margin-top: 10px; }
+.range-error { font-size: 13px; margin-top: 8px; color: #f87171; }
+.slot.slot-preview { background: rgba(197, 160, 89, 0.35); box-shadow: inset 0 0 0 1px var(--primary); }
+.range-actions { display: flex; gap: 8px; margin-top: 12px; }
+button.range-save { background: var(--primary-gradient); border-color: transparent; color: #0b1326; }
+button.range-save:hover { background: var(--primary-hover); }
+
 /* Custom Gold & Dark Scrollbar */
 .grid-wrapper::-webkit-scrollbar, .table-container::-webkit-scrollbar {
   width: 8px;

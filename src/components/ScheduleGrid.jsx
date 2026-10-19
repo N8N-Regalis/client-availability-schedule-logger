@@ -2,11 +2,11 @@ import { memo } from 'react';
 import { TIME_SLOTS, slotId } from '../lib/schedule.js';
 
 // Memoized so toggling one slot doesn't re-render the other ~670 cells
-const SlotCell = memo(function SlotCell({ id, pressed, onToggle }) {
+const SlotCell = memo(function SlotCell({ id, pressed, previewed, onToggle }) {
   return (
     <button
       type="button"
-      className="slot"
+      className={previewed ? 'slot slot-preview' : 'slot'}
       data-slot-id={id}
       aria-pressed={pressed}
       onClick={() => onToggle(id)}
@@ -16,7 +16,7 @@ const SlotCell = memo(function SlotCell({ id, pressed, onToggle }) {
   );
 });
 
-export default function ScheduleGrid({ days, selected, anytime, onToggleSlot, onToggleDay, onToggleTime }) {
+export default function ScheduleGrid({ days, selected, anytime, preview, onToggleSlot, onToggleDay, onToggleTime }) {
   return (
     <div className="grid-wrapper">
       <table className="schedule-table">
@@ -85,7 +85,12 @@ export default function ScheduleGrid({ days, selected, anytime, onToggleSlot, on
                 }
                 return (
                   <td key={day.dateKey}>
-                    <SlotCell id={id} pressed={anytime || selected.has(id)} onToggle={onToggleSlot} />
+                    <SlotCell
+                      id={id}
+                      pressed={anytime || selected.has(id)}
+                      previewed={!!preview && preview.has(id) && !selected.has(id)}
+                      onToggle={onToggleSlot}
+                    />
                   </td>
                 );
               })}
