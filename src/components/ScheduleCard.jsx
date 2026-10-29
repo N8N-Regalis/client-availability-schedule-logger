@@ -16,6 +16,7 @@ export default function ScheduleCard({
   onSelectAllWeekdays,
   onToggleAnytime,
   onAddRange,
+  onSetSlots,
 }) {
   const [rangeOpen, setRangeOpen] = useState(false);
   const [preview, setPreview] = useState(null); // slots the open Date Range panel would add, not yet saved
@@ -65,6 +66,12 @@ export default function ScheduleCard({
         </div>
       )}
 
+      {!anytime && (
+        <p className="grid-hint">
+          Tip: click and drag across boxes to select a block, or click one box and Shift+click another. Press Esc while dragging to cancel.
+        </p>
+      )}
+
       <ScheduleGrid
         days={days}
         selected={selected}
@@ -73,6 +80,7 @@ export default function ScheduleCard({
         onToggleSlot={onToggleSlot}
         onToggleDay={onToggleDay}
         onToggleTime={onToggleTime}
+        onSetSlots={onSetSlots}
       />
     </div>
   );

@@ -197,6 +197,9 @@ button.btn-anytime:disabled { opacity: 0.45; cursor: not-allowed; }
 .range-optional { font-weight: 400; font-size: 11px; color: #94a3b8; }
 .range-hint { font-size: 12px; margin-top: 10px; }
 .range-error { font-size: 13px; margin-top: 8px; color: #f87171; }
+.schedule-table { user-select: none; }
+.slot.slot-drag { box-shadow: inset 0 0 0 2px var(--primary-hover); }
+.grid-hint { font-size: 12px; margin: 0 0 10px; }
 .slot.slot-preview { background: rgba(197, 160, 89, 0.35); box-shadow: inset 0 0 0 1px var(--primary); }
 .range-actions { display: flex; gap: 8px; margin-top: 12px; }
 button.range-save { background: var(--primary-gradient); border-color: transparent; color: #0b1326; }

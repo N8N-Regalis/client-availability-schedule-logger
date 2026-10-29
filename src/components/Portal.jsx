@@ -118,12 +118,17 @@ export default function Portal({ user, onLogout }) {
     toggleBulk(`time:${time}`, ids);
   }, [anytime, days, toggleBulk]);
 
-  // Date Range panel "Save": checks these slots. They become the client's own picks, so header/time
-  // clicks later won't take them back.
-  const addRange = useCallback((ids) => {
+  // Date Range "Save" and drag / Shift+click selection: checks (or unchecks) these slots. They become the
+  // client's own picks, so header/time clicks later won't take them back.
+  const setSlots = useCallback((ids, checked = true) => {
+    if (anytime) return;
     bulkAdds.current.forEach((set) => ids.forEach((id) => set.delete(id)));
-    setSelected((prev) => new Set([...prev, ...ids]));
-  }, []);
+    setSelected((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => (checked ? next.add(id) : next.delete(id)));
+      return next;
+    });
+  }, [anytime]);
 
   const clearSelection = () => {
     bulkAdds.current.clear();
@@ -188,7 +193,8 @@ export default function Portal({ user, onLogout }) {
           onClear={clearSelection}
           onSelectAllWeekdays={selectAllWeekdays}
           onToggleAnytime={() => setAnytime((on) => !on)}
-          onAddRange={addRange}
+          onAddRange={setSlots}
+          onSetSlots={setSlots}
         />
         <ScheduleForm
           anytime={anytime}
